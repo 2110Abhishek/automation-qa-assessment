@@ -87,3 +87,4 @@
 > *I chose the GitHub Search and README endpoints because they provide rich real-world data and test multi-step base64 transformations; I chose Discord webhooks because they support structured, color-coded embeds; and I designed both workflows around strict resilience—zero silent failures and zero false-positive alerts.*
 >
 > *Thank you for reviewing my assessment, and I look forward to discussing my technical reasoning in the follow-up interview!"*
+

@@ -62,3 +62,4 @@ No API secrets, personal access tokens, or sensitive webhook URLs are hard-coded
 - The Discord Webhook URL is dynamically evaluated using n8n expressions:
   `={{ $env.DISCORD_WEBHOOK_URL || 'https://discord.com/api/webhooks/YOUR_WEBHOOK_URL' }}`
 - In production, credentials should be configured within **n8n Settings > Credentials > Header Auth / Custom Webhook** and referenced securely across environments.
+

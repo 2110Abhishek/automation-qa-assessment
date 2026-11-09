@@ -63,3 +63,4 @@ When a confirmed outage occurs, the alert formatter inspects the status code and
 - **Monitored URL:** Configured via expression `{{ $env.MONITORED_APP_URL || 'https://api.realworld.show/api/tags' }}`.
 - **Notification Target:** Dispatches via `{{ $env.DISCORD_WEBHOOK_URL || '...' }}`.
 - **Inspection Frequency:** Runs every 5 minutes automatically, or on demand via `GET /webhook/uptime-ping-trigger`.
+

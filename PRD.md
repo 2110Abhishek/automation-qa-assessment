@@ -82,3 +82,4 @@ PulseQA addresses these problems through structured QA investigation and automat
 | **Bonus (Visual)** | `screenshots/uptime-workflow.png` | High-res uptime monitor workflow canvas | **COMPLETED** |
 | **Loom Walkthrough**| `Loom/demo-link.txt`, `VIDEO_WALKTHROUGH_SCRIPT.md` | Loom demo URL & word-for-word presentation script | **COMPLETED** |
 | **Root Docs** | `README.md` | Complete repository documentation and execution instructions | **COMPLETED** |
+
