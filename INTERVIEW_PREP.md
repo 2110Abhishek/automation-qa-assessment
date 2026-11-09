@@ -1,6 +1,6 @@
 # PulseQA — Technical Interview Defense & Cheat Sheet
 **Role:** Automation & QA Developer  
-**Candidate:** Abhishek  
+**Candidate:** Abhishek Choudhari  
 **Assessment Target:** RealWorld Web Application QA & n8n Workflow Orchestration  
 
 ---

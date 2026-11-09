@@ -2,7 +2,7 @@
 ## PulseQA – Web Application Quality Assurance & Intelligent Automation Platform
 **Version:** 1.0  
 **Date:** November 9, 2026  
-**Author:** Abhishek  
+**Author:** Abhishek Choudhari  
 **Project Type:** Automation & Quality Assurance Developer Assessment  
 **Technology Stack:** n8n, GitHub REST API, JavaScript, Discord Webhooks, Chrome Headless, Python  
 

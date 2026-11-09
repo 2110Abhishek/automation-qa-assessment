@@ -1,6 +1,6 @@
 # Bonus Task — Automated Uptime & Health Monitor
 **Workflow Name:** `Bonus_UptimeMonitor_Abhishek.json`  
-**Author:** Abhishek | Automation & QA Developer  
+**Author:** Abhishek Choudhari | Automation & QA Developer  
 **System:** PulseQA Platform  
 **Target Application:** RealWorld Platform API (`https://api.realworld.show/api/tags`)  
 

@@ -6,7 +6,7 @@
 [![Loom Walkthrough](https://img.shields.io/badge/Loom-Video%20Demo-625DF5?style=flat-square&logo=loom)](./Loom/demo-link.txt)
 [![Assessment](https://img.shields.io/badge/Role-Automation%20%26%20QA%20Developer-blue?style=flat-square)]()
 
-**Candidate:** Abhishek  
+**Candidate:** Abhishek Choudhari  
 **Submission Date:** November 9, 2026  
 **System Name:** PulseQA  
 **Target Application Under Test:** RealWorld (Conduit) Platform  

@@ -1,5 +1,5 @@
 # PulseQA — Technical Assessment Submission Summary
-**Candidate:** Abhishek  
+**Candidate:** Abhishek Choudhari  
 **Role Applied:** Automation & QA Developer  
 **GitHub Repository:** Public Repository Link  
 **Loom Walkthrough:** https://www.loom.com/share/pulseqa-automation-qa-abhishek  

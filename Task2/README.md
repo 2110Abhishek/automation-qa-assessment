@@ -1,6 +1,6 @@
 # Task 2 — n8n API Integration Workflow
 **Workflow Name:** `Task2_Workflow_Abhishek.json`  
-**Author:** Abhishek | Automation & QA Developer  
+**Author:** Abhishek Choudhari | Automation & QA Developer  
 **System:** PulseQA Platform  
 **Target Automation:** GitHub Intelligence Digest & Spotlight Dispatcher  
 

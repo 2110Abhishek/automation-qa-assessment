@@ -1,5 +1,5 @@
 # Loom Video Demonstration
-Candidate: Abhishek
+Candidate: Abhishek Choudhari
 Role: Automation & QA Developer
 Project: PulseQA – Web Application Quality & Automation Monitor
 

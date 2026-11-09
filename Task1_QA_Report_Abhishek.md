@@ -2,7 +2,7 @@
 **Project:** PulseQA – Web Application Quality & Automation Monitor  
 **Target Application:** RealWorld (Conduit) Application Platform  
 **Testing Environment:** Angular/React SPA Frontend (`demo.realworld.show` / `demo.realworld.io`) & REST API (`api.realworld.show/api` / `api.realworld.io/api`)  
-**Assessment Candidate:** Abhishek  
+**Assessment Candidate:** Abhishek Choudhari  
 **Date:** November 9, 2026  
 **Document Status:** Complete / Final  
 
@@ -114,5 +114,5 @@ To permanently remediate this defect, the engineering team must implement a mult
 3. **Establish Security Guardrails for AI Code Generation:** Mandate that all AI-assisted code undergoes static security analysis (SAST) with SonarQube or Snyk to catch missing schema constraints, unescaped HTML renders, and weak password validators before deployment.
 
 ---
-*Report compiled by Abhishek | Lead Automation & QA Developer Candidate | PulseQA Platform*
+*Report compiled by Abhishek Choudhari | Lead Automation & QA Developer Candidate | PulseQA Platform*
 
