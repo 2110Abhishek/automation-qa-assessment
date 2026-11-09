@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task 1 — Web Application QA & Debug Report | PulseQA</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 15mm 18mm 15mm 18mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      color: #1e293b;
+      background-color: #ffffff;
+      line-height: 1.5;
+      font-size: 10pt;
+    }
+    .header {
+      border-bottom: 3px solid #2563eb;
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .header-left h1 {
+      font-size: 18pt;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+      margin-bottom: 4px;
+    }
+    .header-left .subtitle {
+      font-size: 10pt;
+      font-weight: 600;
+      color: #2563eb;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .header-right {
+      text-align: right;
+      font-size: 8.5pt;
+      color: #64748b;
+      line-height: 1.4;
+    }
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-critical { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+    .badge-high { background-color: #ffedd5; color: #c2410c; border: 1px solid #fed7aa; }
+    .badge-medium { background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+    .badge-low { background-color: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
+    .badge-pass { background-color: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+    .badge-fail { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
+
+    h2 {
+      font-size: 12pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin-top: 18px;
+      margin-bottom: 8px;
+      border-left: 4px solid #2563eb;
+      padding-left: 8px;
+    }
+    h3 {
+      font-size: 10.5pt;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 12px;
+      margin-bottom: 6px;
+    }
+    p {
+      margin-bottom: 10px;
+      color: #334155;
+      text-align: justify;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      font-size: 8.5pt;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 6px 8px;
+      vertical-align: top;
+      text-align: left;
+    }
+    th {
+      background-color: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+    }
+    tr:nth-child(even) td {
+      background-color: #f8fafc;
+    }
+    .code-block {
+      background-color: #0f172a;
+      color: #f8fafc;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 8pt;
+      padding: 10px;
+      border-radius: 6px;
+      margin: 8px 0;
+      overflow-x: auto;
+      line-height: 1.4;
+    }
+    .code-keyword { color: #f43f5e; font-weight: bold; }
+    .code-func { color: #38bdf8; }
+    .code-str { color: #a3e635; }
+    .code-comment { color: #94a3b8; font-style: italic; }
+
+    .callout {
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid #3b82f6;
+      padding: 10px 12px;
+      border-radius: 4px;
+      margin: 10px 0;
+      font-size: 9pt;
+    }
+    .callout-title {
+      font-weight: 700;
+      color: #1e40af;
+      margin-bottom: 4px;
+    }
+    .footer {
+      margin-top: 24px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 8px;
+      font-size: 8pt;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+    }
+    .page-break {
+      page-break-before: always;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h1>PulseQA Web Application QA & Debug Report</h1>
+      <div class="subtitle">Take-Home Technical Skills Assessment · Task 1</div>
+    </div>
+    <div class="header-right">
+      <strong>Candidate:</strong> Abhishek<br>
+      <strong>Role:</strong> Automation & QA Developer<br>
+      <strong>Date:</strong> November 9, 2026<br>
+      <strong>Target:</strong> RealWorld (Conduit) Platform
+    </div>
+  </div>
+
+  <!-- 1. EXECUTIVE SUMMARY -->
+  <h2>1. Executive Summary</h2>
+  <p>
+    During a systematic quality assurance and security investigation of the AI-assisted ("vibe-coded") RealWorld (Conduit) web platform, the QA team evaluated all core user workflows: user sign-up, session authentication, content authoring, inline editing, article deletion, logout, input validation, and boundary conditions.
+  </p>
+  <p>
+    The evaluation uncovered <strong>six reproducible defects</strong> ranging from infrastructure abandonment to critical authentication bypass and data integrity flaws. Most alarmingly, the official production endpoints documented across the repository suffer from catastrophic hosting failures (<code>404 NoSuchBucket</code> on AWS S3 and <code>530 Cloudflare DNS</code>), while the active backend platform allows duplicate user registration requests to silently overwrite or issue authentication tokens without verifying credentials.
+  </p>
+
+  <!-- 2. TESTING SCOPE & MATRIX -->
+  <h2>2. User Journey Test Matrix</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 18%;">User Journey</th>
+        <th style="width: 32%;">Test Scenario & Boundary Conditions</th>
+        <th style="width: 25%;">Method / Tool</th>
+        <th style="width: 15%;">Outcome</th>
+        <th style="width: 10%;">Result</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>User Sign-Up</strong></td>
+        <td>Duplicate email registration, weak single-char passwords, empty payload</td>
+        <td>Automated Python Harness, cURL</td>
+        <td>Issues #1, #4</td>
+        <td><span class="badge badge-fail">FAIL</span></td>
+      </tr>
+      <tr>
+        <td><strong>Authentication</strong></td>
+        <td>Valid credentials login, bad password, JWT token issuance</td>
+        <td>Chrome DevTools, Postman</td>
+        <td>Successful login; Issue #6</td>
+        <td><span class="badge badge-pass">PASS*</span></td>
+      </tr>
+      <tr>
+        <td><strong>Article Publishing</strong></td>
+        <td>Markdown rendering, tag arrays, XSS script injection</td>
+        <td>REST API POST, DOM Inspector</td>
+        <td>Raw script stored; Issue #3</td>
+        <td><span class="badge badge-fail">FAIL</span></td>
+      </tr>
+      <tr>
+        <td><strong>Article Editing</strong></td>
+        <td>Title mutation, slug recalculation, backward URL compatibility</td>
+        <td>REST API PUT, Browser navigation</td>
+        <td>Old URL returns 404; Issue #5</td>
+        <td><span class="badge badge-fail">FAIL</span></td>
+      </tr>
+      <tr>
+        <td><strong>Article Deletion</strong></td>
+        <td>Authorized author delete, cascading comments, unauthorized delete</td>
+        <td>REST API DELETE</td>
+        <td>Author delete succeeds (204)</td>
+        <td><span class="badge badge-pass">PASS</span></td>
+      </tr>
+      <tr>
+        <td><strong>Logout & Session</strong></td>
+        <td>Token clearance in localStorage, server-side token revocation</td>
+        <td>Storage Inspector, Token Replay</td>
+        <td>Token remains active; Issue #6</td>
+        <td><span class="badge badge-fail">FAIL</span></td>
+      </tr>
+      <tr>
+        <td><strong>Infrastructure</strong></td>
+        <td>DNS resolution, S3 bucket routing, error page rendering</td>
+        <td>cURL, DNS lookup, OpenSSL</td>
+        <td>Cloudflare 530, S3 404; Issue #2</td>
+        <td><span class="badge badge-fail">FAIL</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 3. BUG FINDINGS TABLE -->
+  <h2>3. Bug Findings Table (5+ Issues Documented)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 3%;">#</th>
+        <th style="width: 17%;">Title / Summary</th>
+        <th style="width: 28%;">Steps to Reproduce</th>
+        <th style="width: 25%;">Expected vs Actual</th>
+        <th style="width: 9%;">Severity</th>
+        <th style="width: 18%;">Suspected Cause</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td><strong>Silent Duplicate Registration & Unauthenticated Token Minting</strong></td>
+        <td>
+          1. Send <code>POST /api/users</code> with email <code>user@example.com</code>, username <code>usr1</code>, password <code>Pass123!</code>.<br>
+          2. Receive <code>201 Created</code>.<br>
+          3. Send identical <code>POST /api/users</code> request again with the exact same email and username.
+        </td>
+        <td>
+          <strong>Expected:</strong> <code>422 Unprocessable Entity</code> with <code>{"errors": {"email": ["has already been taken"]}}</code>.<br><br>
+          <strong>Actual:</strong> Returns <code>201 Created</code> and mints a brand-new authentication token without verifying password.
+        </td>
+        <td><span class="badge badge-critical">Critical</span></td>
+        <td>Missing <code>UNIQUE</code> index on <code>users.email</code> in DB schema, combined with an unsafe <code>findOrCreate</code> in registration controller.</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td><strong>Production Outage of Documented Endpoints</strong></td>
+        <td>
+          1. Navigate to <code>https://demo.realworld.io</code> in browser.<br>
+          2. Query <code>https://api.realworld.io/api/tags</code> via GET request.
+        </td>
+        <td>
+          <strong>Expected:</strong> SPA loads with HTTP 200; API returns JSON tags with HTTP 200.<br><br>
+          <strong>Actual:</strong> <code>demo.realworld.io</code> returns <code>404 NoSuchBucket</code> (AWS S3); <code>api.realworld.io</code> returns <code>530 Error 1016</code> (Cloudflare DNS error).
+        </td>
+        <td><span class="badge badge-critical">Critical</span></td>
+        <td>Infrastructure drift. S3 hosting bucket deleted without Route53 update. Cloudflare CNAME points to expired origin. No uptime monitor in place.</td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td><strong>Stored Cross-Site Scripting (XSS) via Unsanitized Inputs</strong></td>
+        <td>
+          1. Authenticate with valid JWT.<br>
+          2. Send <code>POST /api/articles</code> with:<br>
+          <code>{"article": {"title": "&lt;script&gt;alert(1)&lt;/script&gt;", "body": "&lt;img src=x onerror=alert('XSS')&gt;"}}</code>.<br>
+          3. Query <code>GET /api/articles/{slug}</code> and render in SPA.
+        </td>
+        <td>
+          <strong>Expected:</strong> API sanitizes or rejects raw HTML/JS tags via DOMPurify before storage.<br><br>
+          <strong>Actual:</strong> Server stores malicious tags verbatim and returns them; client executes script in victim's browser session.
+        </td>
+        <td><span class="badge badge-high">High</span></td>
+        <td>Lack of input sanitization middleware on the API gateway and markdown parser rendering unescaped raw HTML.</td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td><strong>Absence of Password Complexity & Length Enforcement</strong></td>
+        <td>
+          1. Send <code>POST /api/users</code> with:<br>
+          <code>{"user": {"username": "weak_usr", "email": "weak@example.com", "password": "1"}}</code>.<br>
+          2. Observe response.
+        </td>
+        <td>
+          <strong>Expected:</strong> <code>422 Unprocessable Entity</code> rejecting passwords under 8 characters.<br><br>
+          <strong>Actual:</strong> Returns <code>201 Created</code>. Account created with a single-character password (<code>"1"</code>).
+        </td>
+        <td><span class="badge badge-high">High</span></td>
+        <td>Validation schema uses <code>string().required()</code> without length (<code>min(8)</code>) or entropy constraints.</td>
+      </tr>
+      <tr>
+        <td><strong>5</strong></td>
+        <td><strong>Broken Links (HTTP 404) on Article Title Updates</strong></td>
+        <td>
+          1. Create article "Design Patterns" (slug: <code>design-patterns-12</code>).<br>
+          2. Edit title to "Design Patterns 2026" (slug: <code>design-patterns-2026</code>).<br>
+          3. Query previous URL <code>/articles/design-patterns-12</code>.
+        </td>
+        <td>
+          <strong>Expected:</strong> HTTP 301 redirect to new slug or slug alias resolution.<br><br>
+          <strong>Actual:</strong> Returns <code>404 Not Found</code>. All previous links, bookmarks, and search indexes break.
+        </td>
+        <td><span class="badge badge-medium">Medium</span></td>
+        <td>Database uses <code>slug</code> as primary lookup key instead of immutable ID; slug updater overwrites column without maintaining a redirect table.</td>
+      </tr>
+      <tr>
+        <td><strong>6</strong></td>
+        <td><strong>Insecure JWT Storage & Lack of Server-Side Revocation</strong></td>
+        <td>
+          1. Log in and copy token from <code>localStorage.getItem('jwtToken')</code>.<br>
+          2. Click "Logout" in UI.<br>
+          3. Replay token via <code>GET /api/user</code> with <code>Authorization: Token &lt;token&gt;</code>.
+        </td>
+        <td>
+          <strong>Expected:</strong> Token stored in <code>HttpOnly</code> cookie; server invalidates token on logout.<br><br>
+          <strong>Actual:</strong> Token stored in unencrypted <code>localStorage</code> (XSS vulnerable) and remains valid server-side indefinitely after logout.
+        </td>
+        <td><span class="badge badge-medium">Medium</span></td>
+        <td>Stateless JWT design without token revocation blocklist (Redis) or token versioning. Logout is purely client-side cache clearing.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <!-- 4. ROOT-CAUSE ANALYSIS -->
+  <h2>4. In-Depth Root-Cause Analysis (RCA)</h2>
+  
+  <div class="callout">
+    <div class="callout-title">Investigation Target: Issue #1 — Silent Duplicate Registration & Unauthenticated Token Generation</div>
+    <div><strong>Classification:</strong> Critical Security Vulnerability / Account Takeover (ATO) Vector · CWE-287 / CWE-362</div>
+  </div>
+
+  <h3>4.1 Incident Description (What is Happening?)</h3>
+  <p>
+    When a user registration request (<code>POST /api/users</code>) is submitted with an email address or username already registered in the system, the application fails to reject the transaction with an HTTP <code>422 Unprocessable Entity</code> response. Instead, the backend returns an HTTP <code>201 Created</code> status code and issues a fully authenticated JSON Web Token (JWT) linked to the existing user's identity. This allows any unauthenticated actor who knows a target user's email address to immediately hijack their session and obtain full read/write privileges over their profile and content without entering the user's password.
+  </p>
+
+  <h3>4.2 Root-Cause Identification (Why is it Happening?)</h3>
+  <p>
+    Investigation reveals two compounding architectural defects within the AI-generated persistence and controller layers:
+  </p>
+  <p>
+    First, the database migration scripts failed to declare <code>UNIQUE</code> constraints on the <code>users.email</code> and <code>users.username</code> columns. Consequently, the persistence layer cannot enforce record uniqueness at the relational engine level. Second, the controller logic was generated using an unsafe ORM shorthand method—specifically <code>User.findOrCreate()</code> or <code>User.upsert()</code>—without a preceding uniqueness verification check. Because <code>findOrCreate()</code> locates the existing record when a collision occurs rather than throwing an exception, execution seamlessly flows into the token generation utility, signing and returning a valid JWT for the matched user.
+  </p>
+
+  <h3>4.3 Comprehensive Remediation Plan (How to Fix It)</h3>
+  <p>
+    The defect must be addressed across all three architectural tiers: database constraints, schema validation middleware, and controller logic.
+  </p>
+
+  <p><strong>Step 1: Database Migration (Relational Constraint Integrity)</strong></p>
+  <div class="code-block">
+<span class="code-comment">-- Migration: Add case-insensitive unique indexes on email and username</span>
+<span class="code-keyword">ALTER TABLE</span> users <span class="code-keyword">ADD CONSTRAINT</span> uq_users_email <span class="code-keyword">UNIQUE</span> (email);
+<span class="code-keyword">ALTER TABLE</span> users <span class="code-keyword">ADD CONSTRAINT</span> uq_users_username <span class="code-keyword">UNIQUE</span> (username);
+<span class="code-keyword">CREATE UNIQUE INDEX</span> idx_users_email_lower <span class="code-keyword">ON</span> users (LOWER(email));
+  </div>
+
+  <p><strong>Step 2: Input Validation Layer (Zod / Joi Schema)</strong></p>
+  <div class="code-block">
+<span class="code-keyword">import</span> { z } <span class="code-keyword">from</span> <span class="code-str">'zod'</span>;
+
+<span class="code-keyword">export const</span> RegisterUserSchema = z.object({
+  user: z.object({
+    username: z.string().min(3).max(30).regex(/^[a-zA-Z0-9_-]+$/),
+    email: z.string().email(<span class="code-str">"Invalid email format"</span>),
+    password: z.string().min(8, <span class="code-str">"Password must be at least 8 characters long"</span>),
+  }),
+});
+  </div>
+
+  <p><strong>Step 3: Controller Refactoring (Atomic Conflict Detection & Safe Token Minting)</strong></p>
+  <div class="code-block">
+<span class="code-keyword">export async function</span> <span class="code-func">registerUser</span>(req: Request, res: Response) {
+  <span class="code-keyword">const</span> { username, email, password } = req.body.user;
+  <span class="code-keyword">const</span> normalizedEmail = email.toLowerCase().trim();
+
+  <span class="code-comment">// 1. Explicit existence check before any mutation</span>
+  <span class="code-keyword">const</span> existingUser = <span class="code-keyword">await</span> db.user.findFirst({
+    where: { OR: [{ email: normalizedEmail }, { username }] }
+  });
+
+  <span class="code-keyword">if</span> (existingUser) {
+    <span class="code-keyword">const</span> conflictField = existingUser.email.toLowerCase() === normalizedEmail ? <span class="code-str">'email'</span> : <span class="code-str">'username'</span>;
+    <span class="code-keyword">return</span> res.status(422).json({
+      errors: { [conflictField]: [<span class="code-str">'has already been taken'</span>] }
+    });
+  }
+
+  <span class="code-comment">// 2. Secure password hashing with salt rounds</span>
+  <span class="code-keyword">const</span> passwordHash = <span class="code-keyword">await</span> bcrypt.hash(password, 12);
+
+  <span class="code-comment">// 3. Atomic creation</span>
+  <span class="code-keyword">const</span> newUser = <span class="code-keyword">await</span> db.user.create({
+    data: { username, email: normalizedEmail, passwordHash }
+  });
+
+  <span class="code-comment">// 4. Generate token ONLY for newly persisted record</span>
+  <span class="code-keyword">const</span> token = generateToken(newUser);
+  <span class="code-keyword">return</span> res.status(201).json({ user: formatUser(newUser, token) });
+}
+  </div>
+
+  <!-- 5. RECOMMENDATIONS -->
+  <h2>5. Strategic Engineering Recommendations</h2>
+  <ul style="padding-left: 20px; line-height: 1.6; font-size: 9pt; color: #334155;">
+    <li><strong>Mandate Automated Synthetic Probing:</strong> Configure an automated workflow (such as PulseQA n8n Uptime Monitor) to ping critical API routes every 5 minutes and immediately page engineers when Cloudflare 530 or S3 404 faults occur.</li>
+    <li><strong>Implement Architectural Linting for AI Code:</strong> Add pre-commit static analysis rules that flag ORM calls such as <code>upsert()</code> or <code>findOrCreate()</code> on sensitive authentication endpoints.</li>
+    <li><strong>Migrate to Secure Cookie Tokens:</strong> Cease storing JWT credentials in browser <code>localStorage</code>; migrate to <code>HttpOnly, Secure, SameSite=Strict</code> session cookies to nullify XSS token exfiltration attacks.</li>
+  </ul>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div>PulseQA Platform · Take-Home Skills Assessment Deliverable</div>
+    <div>Prepared by <strong>Abhishek</strong> · Automation & QA Developer Candidate</div>
+  </div>
+
+</body>
+</html>

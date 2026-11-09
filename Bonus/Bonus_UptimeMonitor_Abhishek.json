@@ -1,0 +1,488 @@
+{
+  "name": "Bonus_UptimeMonitor_Abhishek",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      },
+      "id": "node-schedule-5min",
+      "name": "Schedule Trigger (Every 5 Min)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        200,
+        260
+      ],
+      "notesInFlow": true,
+      "notes": "Executes continuous health checks every 5 minutes"
+    },
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "uptime-ping-trigger",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "node-webhook-uptime",
+      "name": "Manual Health Check Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        200,
+        460
+      ],
+      "notesInFlow": true,
+      "notes": "Allows manual on-demand health probes via cURL"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Initialize probe timestamp and configuration\nconst targetUrl = $env.MONITORED_APP_URL || 'https://api.realworld.show/api/tags';\nconst targetName = 'RealWorld Conduit Platform (Production)';\n\nreturn [{\n  json: {\n    targetUrl,\n    targetName,\n    probeStartTime: Date.now(),\n    probeTimestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "node-init-probe",
+      "name": "Initialize Probe Configuration",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        360
+      ],
+      "notesInFlow": true,
+      "notes": "Captures start timestamp and target URL for latency calculation"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.targetUrl }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "PulseQA-UptimeSentinel/1.0"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 8000
+        }
+      },
+      "id": "node-ping-endpoint",
+      "name": "Primary Health Check (Ping)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        680,
+        360
+      ],
+      "continueOnFail": true,
+      "notesInFlow": true,
+      "notes": "Pings the monitored application; Continue On Fail ensures non-200 responses are captured"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Measure latency and evaluate HTTP status\nconst initData = $('Initialize Probe Configuration').first().json;\nconst pingResponse = $input.first().json;\nconst latencyMs = Date.now() - initData.probeStartTime;\n\n// Check status code: HTTP Request node returns statusCode in metadata or response\nconst statusCode = pingResponse.statusCode || (pingResponse.error ? (pingResponse.error.statusCode || 500) : 200);\nconst isHealthy = statusCode === 200;\n\nreturn [{\n  json: {\n    ...initData,\n    primaryStatusCode: statusCode,\n    latencyMs: latencyMs,\n    isHealthy: isHealthy,\n    rawResponse: pingResponse.error ? pingResponse.error.message : 'OK'\n  }\n}];"
+      },
+      "id": "node-eval-primary-ping",
+      "name": "Calculate Latency & Health Check",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        920,
+        360
+      ],
+      "notesInFlow": true,
+      "notes": "Calculates round-trip response time (ms) and determines status code"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-is-healthy",
+              "leftValue": "={{ $json.isHealthy }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-if-healthy",
+      "name": "Is Application Healthy (200 OK)?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1160,
+        360
+      ],
+      "notesInFlow": true,
+      "notes": "Evaluates if application responded with HTTP 200"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log healthy heartbeat metric\nconst data = $input.first().json;\nconsole.log(`[PulseQA Heartbeat] Target: ${data.targetName} | Status: 200 OK | Latency: ${data.latencyMs}ms | Time: ${data.probeTimestamp}`);\n\nreturn [{\n  json: {\n    status: 'HEALTHY',\n    target: data.targetName,\n    url: data.targetUrl,\n    latency: `${data.latencyMs}ms`,\n    timestamp: data.probeTimestamp\n  }\n}];"
+      },
+      "id": "node-log-healthy",
+      "name": "Log Healthy Heartbeat",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1420,
+        240
+      ],
+      "notesInFlow": true,
+      "notes": "Records successful probe metric for health telemetry and daily summary"
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "node-wait-retry",
+      "name": "Wait 5 Seconds (Retry Buffer)",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1420,
+        480
+      ],
+      "notesInFlow": true,
+      "notes": "Retry Logic: Pauses 5s before retrying to prevent false positives from transient packet drops"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Initialize Probe Configuration').first().json.targetUrl }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "PulseQA-UptimeSentinel/1.0-RetryProbe"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 8000
+        }
+      },
+      "id": "node-retry-ping",
+      "name": "Retry Probe (Second Attempt)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1660,
+        480
+      ],
+      "continueOnFail": true,
+      "notesInFlow": true,
+      "notes": "Secondary confirmation probe to verify outage persistence"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process retry outcome and confirm outage\nconst primaryData = $('Calculate Latency & Health Check').first().json;\nconst retryResponse = $input.first().json;\n\nconst retryStatusCode = retryResponse.statusCode || (retryResponse.error ? (retryResponse.error.statusCode || 500) : 200);\nconst outageConfirmed = retryStatusCode !== 200;\n\nreturn [{\n  json: {\n    ...primaryData,\n    retryStatusCode: retryStatusCode,\n    outageConfirmed: outageConfirmed,\n    retryTimestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "node-eval-retry",
+      "name": "Evaluate Retry Outcome",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1900,
+        480
+      ],
+      "notesInFlow": true,
+      "notes": "Compares primary and secondary probe results"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cond-outage-confirmed",
+              "leftValue": "={{ $json.outageConfirmed }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "node-if-outage-confirmed",
+      "name": "Outage Confirmed (Both Probes Failed)?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        2140,
+        480
+      ],
+      "notesInFlow": true,
+      "notes": "Verifies that both probes failed before dispatching critical incident alert"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format Critical Outage Incident Alert\nconst data = $input.first().json;\n\nconst discordPayload = {\n  content: \"\ud83d\udea8 **@here CRITICAL ALERT: WEB APPLICATION OUTAGE DETECTED**\",\n  username: \"PulseQA Uptime Sentinel\",\n  avatar_url: \"https://cdn-icons-png.flaticon.com/512/564/564619.png\",\n  embeds: [\n    {\n      title: \"\ud83d\udea8 SERVICE DISRUPTION: Monitored Application Unhealthy\",\n      description: `Continuous monitoring detected an active outage on **${data.targetName}**.\\nBoth the primary probe and the 5-second confirmation retry failed.`,\n      color: 15158332, // #E74C3C Red\n      fields: [\n        {\n          name: \"Monitored Target\",\n          value: `[${data.targetName}](${data.targetUrl})\\n\\`${data.targetUrl}\\``,\n          inline: false\n        },\n        {\n          name: \"Primary Probe Status\",\n          value: `HTTP \\`${data.primaryStatusCode}\\` (Latency: ${data.latencyMs}ms)`,\n          inline: true\n        },\n        {\n          name: \"Retry Probe Status\",\n          value: `HTTP \\`${data.retryStatusCode}\\``,\n          inline: true\n        },\n        {\n          name: \"Incident Timestamp\",\n          value: `\\`${data.retryTimestamp}\\``,\n          inline: true\n        },\n        {\n          name: \"Automated Root-Cause Diagnostic\",\n          value: data.primaryStatusCode === 530 ? \"\u26a0\ufe0f **Cloudflare 530 Error 1016:** Origin DNS failure. Domain DNS or CNAME record points to unreachable host.\" :\n                 data.primaryStatusCode === 404 ? \"\u26a0\ufe0f **HTTP 404:** Upstream resource or S3 hosting bucket missing.\" :\n                 \"\u26a0\ufe0f **Server Failure:** Upstream server returned 5xx error or connection timed out.\",\n          inline: false\n        },\n        {\n          name: \"Immediate Action Checklist\",\n          value: \"1. Check cloud hosting / DNS dashboard\\n2. Verify origin container health & Nginx logs\\n3. Confirm SSL certificate validity\",\n          inline: false\n        }\n      ],\n      footer: {\n        text: \"PulseQA Uptime Sentinel \u00b7 Automated Incident Management via n8n\"\n      }\n    }\n  ]\n};\n\nreturn [{ json: { ...data, discordPayload } }];"
+      },
+      "id": "node-format-outage-alert",
+      "name": "Format Critical Outage Alert",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2400,
+        420
+      ],
+      "notesInFlow": true,
+      "notes": "Constructs critical red Discord incident embed with diagnostic steps"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Format Transient Flap Recovery Notice\nconst data = $input.first().json;\n\nconst discordPayload = {\n  username: \"PulseQA Uptime Sentinel\",\n  avatar_url: \"https://cdn-icons-png.flaticon.com/512/1006/1006771.png\",\n  embeds: [\n    {\n      title: \"\u26a0\ufe0f Transient Network Glitch Resolved (Self-Healed)\",\n      description: `Primary health check returned HTTP \\`${data.primaryStatusCode}\\`, but the 5-second confirmation retry responded **200 OK**.\\nNo active outage confirmed. Service is operating normally.`,\n      color: 16776960, // #FFFF00 Yellow\n      fields: [\n        {\n          name: \"Target\",\n          value: data.targetName,\n          inline: true\n        },\n        {\n          name: \"Recovery Latency\",\n          value: `${data.latencyMs}ms`,\n          inline: true\n        }\n      ],\n      footer: {\n        text: `PulseQA Telemetry Sentinel \u00b7 ${data.retryTimestamp}`\n      }\n    }\n  ]\n};\n\nreturn [{ json: { ...data, discordPayload } }];"
+      },
+      "id": "node-format-flap-notice",
+      "name": "Format Transient Flap Notice",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2400,
+        600
+      ],
+      "notesInFlow": true,
+      "notes": "Constructs yellow recovery embed if retry succeeded"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL || 'https://discord.com/api/webhooks/DISCORD_WEBHOOK_ID/DISCORD_WEBHOOK_TOKEN' }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.discordPayload) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "node-post-outage-discord",
+      "name": "Post Critical Outage to Discord",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2660,
+        420
+      ],
+      "continueOnFail": true,
+      "notesInFlow": true,
+      "notes": "Dispatches critical outage notification to operations channel"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.DISCORD_WEBHOOK_URL || 'https://discord.com/api/webhooks/DISCORD_WEBHOOK_ID/DISCORD_WEBHOOK_TOKEN' }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.discordPayload) }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "node-post-flap-discord",
+      "name": "Post Flap Notice to Discord",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2660,
+        600
+      ],
+      "continueOnFail": true,
+      "notesInFlow": true,
+      "notes": "Dispatches transient flap notification"
+    }
+  ],
+  "connections": {
+    "Schedule Trigger (Every 5 Min)": {
+      "main": [
+        [
+          {
+            "node": "Initialize Probe Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Health Check Webhook": {
+      "main": [
+        [
+          {
+            "node": "Initialize Probe Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initialize Probe Configuration": {
+      "main": [
+        [
+          {
+            "node": "Primary Health Check (Ping)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Primary Health Check (Ping)": {
+      "main": [
+        [
+          {
+            "node": "Calculate Latency & Health Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Latency & Health Check": {
+      "main": [
+        [
+          {
+            "node": "Is Application Healthy (200 OK)?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Application Healthy (200 OK)?": {
+      "main": [
+        [
+          {
+            "node": "Log Healthy Heartbeat",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 5 Seconds (Retry Buffer)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5 Seconds (Retry Buffer)": {
+      "main": [
+        [
+          {
+            "node": "Retry Probe (Second Attempt)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retry Probe (Second Attempt)": {
+      "main": [
+        [
+          {
+            "node": "Evaluate Retry Outcome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate Retry Outcome": {
+      "main": [
+        [
+          {
+            "node": "Outage Confirmed (Both Probes Failed)?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outage Confirmed (Both Probes Failed)?": {
+      "main": [
+        [
+          {
+            "node": "Format Critical Outage Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Format Transient Flap Notice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Critical Outage Alert": {
+      "main": [
+        [
+          {
+            "node": "Post Critical Outage to Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Transient Flap Notice": {
+      "main": [
+        [
+          {
+            "node": "Post Flap Notice to Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "88784709-ced7-4f1d-b7b1-a98a433669ce",
+  "id": "pulseqa-uptime-monitor-bonus",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "pulseqa-abhishek-instance"
+  }
+}

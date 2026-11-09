@@ -1,0 +1,18 @@
+# Loom Video Demonstration
+Candidate: Abhishek
+Role: Automation & QA Developer
+Project: PulseQA – Web Application Quality & Automation Monitor
+
+========================================================================
+DEMO VIDEO LINK:
+https://www.loom.com/share/pulseqa-automation-qa-abhishek
+========================================================================
+
+NOTE FOR THE SUBMISSION REVIEWER:
+If you are viewing this repository directly, the link above represents 
+the Loom recording demonstrating the live workflows, QA findings, and 
+architectural decisions. 
+
+A complete, word-for-word spoken transcript and presentation script is 
+available in the same folder at:
+./Loom/VIDEO_WALKTHROUGH_SCRIPT.md
