@@ -18,28 +18,10 @@
       "typeVersion": 1.2,
       "position": [
         200,
-        260
+        360
       ],
       "notesInFlow": true,
-      "notes": "Executes continuous health checks every 5 minutes"
-    },
-    {
-      "parameters": {
-        "httpMethod": "GET",
-        "path": "uptime-ping-trigger",
-        "responseMode": "onReceived",
-        "options": {}
-      },
-      "id": "node-webhook-uptime",
-      "name": "Manual Health Check Webhook",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [
-        200,
-        460
-      ],
-      "notesInFlow": true,
-      "notes": "Allows manual on-demand health probes via cURL"
+      "notes": "Executes continuous health checks every 5 minutes (Click 'Test workflow' to run immediately)"
     },
     {
       "parameters": {
@@ -339,17 +321,6 @@
         ]
       ]
     },
-    "Manual Health Check Webhook": {
-      "main": [
-        [
-          {
-            "node": "Initialize Probe Configuration",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Initialize Probe Configuration": {
       "main": [
         [
@@ -479,7 +450,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "88784709-ced7-4f1d-b7b1-a98a433669ce",
+  "versionId": "2232297b-258f-43a6-92b8-cb94c4c44b3c",
   "id": "pulseqa-uptime-monitor-bonus",
   "meta": {
     "templateCredsSetupCompleted": true,

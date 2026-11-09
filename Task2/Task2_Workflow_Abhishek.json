@@ -18,28 +18,10 @@
       "typeVersion": 1.2,
       "position": [
         200,
-        260
+        360
       ],
       "notesInFlow": true,
-      "notes": "Initiates the automated briefing every 1 hour"
-    },
-    {
-      "parameters": {
-        "httpMethod": "GET",
-        "path": "github-digest-trigger",
-        "responseMode": "onReceived",
-        "options": {}
-      },
-      "id": "node-webhook-trigger",
-      "name": "Webhook Trigger (On-Demand)",
-      "type": "n8n-nodes-base.webhook",
-      "typeVersion": 2,
-      "position": [
-        200,
-        460
-      ],
-      "notesInFlow": true,
-      "notes": "Allows manual triggering via cURL or Postman"
+      "notes": "Initiates the automated briefing every 1 hour (Click 'Test workflow' to run immediately)"
     },
     {
       "parameters": {
@@ -340,17 +322,6 @@
         ]
       ]
     },
-    "Webhook Trigger (On-Demand)": {
-      "main": [
-        [
-          {
-            "node": "Fetch Popular Repositories",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Fetch Popular Repositories": {
       "main": [
         [
@@ -469,7 +440,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "d3985bf1-0f21-4be4-940e-cdedcd4af3c0",
+  "versionId": "f8cdd75b-8080-4f96-a001-7c32cc294002",
   "id": "pulseqa-github-digest-task2",
   "meta": {
     "templateCredsSetupCompleted": true,
