@@ -89,3 +89,4 @@ The interviewers will evaluate three primary competencies:
 > *"No secrets or webhook tokens are ever committed in plaintext to workflow JSON files. We use two best practices:*
 > 1. *In development and containerized environments, we reference environment variables using n8n expressions: `{{ $env.DISCORD_WEBHOOK_URL }}`.*
 > 2. *In production, we store secrets in n8n's encrypted **Credentials Store** (AES-256 encrypted in the PostgreSQL/SQLite backend) and bind them via node credential references."*
+
