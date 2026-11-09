@@ -35,3 +35,4 @@ Built an automated intelligence briefing workflow in n8n ([`Task2/Task2_Workflow
 Built an automated synthetic monitoring workflow ([`Bonus/Bonus_UptimeMonitor_Abhishek.json`](./Bonus/Bonus_UptimeMonitor_Abhishek.json)):
 - **5-Minute Heartbeat:** Pings target application API and tracks round-trip latency in milliseconds.
 - **Anti-Flap Retry Buffer:** If the primary check fails, pauses 5 seconds and issues a confirmation probe. Transient packet drops log a self-healing notice; confirmed outages dispatch an immediate `@here` Discord alert with root-cause diagnostics (e.g. Cloudflare 530 vs S3 404 vs 500) and an emergency checklist.
+
